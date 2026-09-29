@@ -12,8 +12,25 @@ POSTS = [
 
 @app.route('/api/posts', methods=['GET'])
 def get_posts():
-    """Return all blog posts."""
-    return jsonify(POSTS)
+    """Return all blog posts, optionally sorted by title or content."""
+    sort_field = request.args.get('sort')
+    direction = request.args.get('direction', 'asc')
+
+    if sort_field and sort_field not in ('title', 'content'):
+        return jsonify({"error": "Invalid sort field."}), 400
+
+    if direction not in ('asc', 'desc'):
+        return jsonify({"error": "Invalid sort direction."}), 400
+
+    posts = POSTS.copy()
+
+    if sort_field:
+        posts.sort(
+            key=lambda post: post[sort_field].lower(),
+            reverse=direction == 'desc'
+        )
+
+    return jsonify(posts)
 
 
 @app.route('/api/posts', methods=['POST'])
