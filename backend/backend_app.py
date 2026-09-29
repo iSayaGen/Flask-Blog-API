@@ -57,5 +57,28 @@ def delete_post(id):
         "message": f"Post with id {id} has been deleted successfully."}), 200
 
 
+@app.route('/api/posts/<int:id>', methods=['PUT'])
+def update_post(id):
+    """Update the title and/or content of an existing blog post."""
+    post = next((post for post in POSTS if post["id"] == id), None)
+
+    if post is None:
+        return jsonify({"error": f"Post with id {id} not found."}), 404
+
+    data = request.get_json() or {}
+
+    if 'title' in data:
+        if not isinstance(data['title'], str) or not data['title'].strip():
+            return jsonify({"error": "Title cannot be empty."}), 400
+        post["title"] = data["title"]
+
+    if 'content' in data:
+        if not isinstance(data['content'], str) or not data['content'].strip():
+            return jsonify({"error": "Content cannot be empty."}), 400
+        post["content"] = data["content"]
+
+    return jsonify(post), 200
+
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5002, debug=True)
