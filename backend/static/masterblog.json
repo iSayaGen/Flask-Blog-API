@@ -1,0 +1,204 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Masterblog API",
+    "version": "1.0.0"
+  },
+  "host": "localhost:5002",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Post",
+      "description": "Post API - CRUD"
+    }
+  ],
+  "paths": {
+    "/api/posts": {
+      "get": {
+        "summary": "Get all posts",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Post"
+        ],
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "type": "string",
+            "enum": [
+              "title",
+              "content"
+            ],
+            "required": false
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "400": {
+            "description": "Invalid sort field or direction"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new post",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Post"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "post",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "title",
+                "content"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Post created successfully"
+          },
+          "400": {
+            "description": "Missing required fields"
+          }
+        }
+      }
+    },
+    "/api/posts/search": {
+      "get": {
+        "summary": "Search posts by title and/or content",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Post"
+        ],
+        "parameters": [
+          {
+            "name": "title",
+            "in": "query",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "content",
+            "in": "query",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/api/posts/{post_id}": {
+      "put": {
+        "summary": "Update a post",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Post"
+        ],
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "post",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post updated successfully"
+          },
+          "400": {
+            "description": "Invalid title or content"
+          },
+          "404": {
+            "description": "Post not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a post",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Post"
+        ],
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post deleted successfully"
+          },
+          "404": {
+            "description": "Post not found"
+          }
+        }
+      }
+    }
+  }
+}
